@@ -1,0 +1,24 @@
+{
+	admin off
+}
+
+{$SITE_ADDRESS::80} {
+	encode zstd gzip
+
+	# API: strip the /api prefix so the Node service sees /health, /recipe, etc.
+	handle_path /api/* {
+		reverse_proxy app:8080
+	}
+
+	# Websocket for live sync (Phase 8)
+	handle /ws {
+		reverse_proxy app:8080
+	}
+
+	# Everything else: the React PWA (SPA fallback to index.html)
+	handle {
+		root * /srv
+		try_files {path} /index.html
+		file_server
+	}
+}

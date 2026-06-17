@@ -1,0 +1,56 @@
+name: grocery-helper
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-grocery}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-grocery}
+      POSTGRES_DB: ${POSTGRES_DB:-grocery}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-grocery} -d ${POSTGRES_DB:-grocery}"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+    ports:
+      # Exposed so you can run the Node service on the host during dev.
+      - "5432:5432"
+
+  app:
+    build: ./server
+    restart: unless-stopped
+    environment:
+      PORT: 8080
+      DATABASE_URL: postgres://${POSTGRES_USER:-grocery}:${POSTGRES_PASSWORD:-grocery}@db:5432/${POSTGRES_DB:-grocery}
+      HOUSEHOLD_TOKEN: ${HOUSEHOLD_TOKEN:-changeme}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      # Direct API access for dev/debug; in prod traffic goes through caddy.
+      - "8080:8080"
+
+  caddy:
+    build:
+      context: .
+      dockerfile: caddy/Dockerfile
+    restart: unless-stopped
+    environment:
+      SITE_ADDRESS: ${SITE_ADDRESS:-:80}
+    depends_on:
+      - app
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - caddy-data:/data
+      - caddy-config:/config
+
+volumes:
+  db-data:
+  caddy-data:
+  caddy-config:
