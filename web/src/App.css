@@ -1,59 +1,140 @@
 .app {
-  max-width: 32rem;
+  max-width: 34rem;
   margin: 0 auto;
-  padding: 2rem 1.25rem;
+  padding: 1.25rem 1rem 3rem;
 }
 
 header h1 {
-  margin: 0 0 0.25rem;
-  font-size: 1.75rem;
-}
-
-.tagline {
-  margin: 0 0 1.5rem;
-  opacity: 0.7;
+  margin: 0 0 1rem;
+  font-size: 1.5rem;
 }
 
 .card {
-  background: rgba(127, 127, 127, 0.08);
-  border: 1px solid rgba(127, 127, 127, 0.18);
-  border-radius: 0.75rem;
-  padding: 1rem 1.25rem;
+  background: rgba(127, 127, 127, 0.07);
+  border: 1px solid rgba(127, 127, 127, 0.16);
+  border-radius: 0.85rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
 }
 
-.card h2 {
-  margin: 0 0 0.5rem;
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  opacity: 0.6;
+/* --- URL form --- */
+.url-form {
+  display: flex;
+  gap: 0.5rem;
+}
+.url-form input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid rgba(127, 127, 127, 0.3);
+  border-radius: 0.6rem;
+  background: var(--field, #fff);
+  color: inherit;
+  font-size: 1rem;
+}
+@media (prefers-color-scheme: dark) {
+  .url-form input { background: #1f2327; }
 }
 
-.status {
+button {
+  font: inherit;
+  cursor: pointer;
+  border: none;
+  border-radius: 0.6rem;
+  padding: 0.55rem 0.9rem;
+  background: #16a34a;
+  color: #fff;
+  font-weight: 600;
+}
+button:disabled { opacity: 0.5; cursor: default; }
+button.ghost { background: transparent; color: #dc2626; font-weight: 500; padding: 0.3rem 0.5rem; }
+
+/* --- recipe --- */
+.recipe h2 { margin: 1rem 0 0.5rem; font-size: 1.2rem; }
+
+.scale { margin: 0.5rem 0 0.75rem; }
+.stepper, .mult {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  margin: 0;
-  font-variant-numeric: tabular-nums;
+  flex-wrap: wrap;
+}
+.stepper > span:first-child, .mult > span:first-child {
+  font-weight: 600;
+  margin-right: 0.25rem;
+}
+.stepper button, .mult button {
+  background: rgba(127, 127, 127, 0.15);
+  color: inherit;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  display: grid;
+  place-items: center;
+}
+.mult button { width: auto; padding: 0 0.6rem; }
+.mult button.active { background: #16a34a; color: #fff; }
+.stepper strong { min-width: 1.5rem; text-align: center; font-size: 1.1rem; }
+
+.ingredients, .list ul { list-style: none; margin: 0; padding: 0; }
+.ingredients li {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.4rem 0;
+  border-top: 1px solid rgba(127, 127, 127, 0.12);
+}
+.qty { font-variant-numeric: tabular-nums; min-width: 4.5rem; font-weight: 600; }
+.name { flex: 1; }
+.muted { opacity: 0.55; font-style: normal; font-size: 0.9em; }
+
+.aisle {
+  font-size: 0.7rem;
+  padding: 0.1rem 0.45rem;
+  border-radius: 1rem;
+  white-space: nowrap;
+  background: rgba(127, 127, 127, 0.18);
 }
 
-.status .dot {
-  width: 0.6rem;
-  height: 0.6rem;
-  border-radius: 50%;
-  background: currentColor;
-}
+button.add { width: 100%; margin-top: 0.75rem; padding: 0.7rem; font-size: 1rem; }
 
-.status.up {
-  color: #16a34a;
+/* --- grocery list --- */
+.list-head {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.5rem;
 }
+.list-head h2 { margin: 0; font-size: 1.2rem; }
+.count { opacity: 0.6; font-size: 0.85rem; }
+.list-head .ghost { margin-left: auto; }
 
-.status.down {
-  color: #dc2626;
+.aisle-group { margin-top: 0.75rem; }
+.aisle-head {
+  margin: 0 0 0.25rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.7;
 }
+.list li {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.35rem 0;
+  border-top: 1px solid rgba(127, 127, 127, 0.12);
+}
+.empty { padding: 0.5rem 0; }
 
-footer {
-  margin-top: 2rem;
-  font-size: 0.8rem;
-  opacity: 0.5;
-}
+/* aisle accent colors */
+.a-Produce { background: rgba(22, 163, 74, 0.18); }
+.a-Dairy { background: rgba(59, 130, 246, 0.18); }
+.a-Meat { background: rgba(220, 38, 38, 0.16); }
+.a-Bakery { background: rgba(217, 119, 6, 0.18); }
+.a-Frozen { background: rgba(14, 165, 233, 0.18); }
+.a-Spices { background: rgba(168, 85, 247, 0.18); }
+
+.msg { margin: 0.5rem 0 0; font-size: 0.9rem; }
+.msg.error { color: #dc2626; }
+.msg.ok { color: #16a34a; }
+
+footer { margin-top: 1.5rem; font-size: 0.8rem; opacity: 0.5; }
