@@ -2,13 +2,14 @@ import { Hono } from 'hono';
 import { fetchHtml } from '../recipe/fetchHtml';
 import { extractRecipe } from '../recipe/jsonld';
 import { parseIngredient } from '../recipe/parseIngredient';
+import { classifyAisles, normalizeName } from '../aisle/aisle';
 
 export const recipeRoute = new Hono();
 
 // POST /recipe  { url } -> { title, sourceUrl, baseServings, ingredients[] }
-// Phase 3: scrape + schema.org JSON-LD parse + heuristic ingredient parse.
-// No persistence yet (recipes are saved when added to the list — Phase 5),
-// and no LLM yet (Haiku parse + aisle classify arrive in Phase 4).
+// Scrape + schema.org JSON-LD parse + heuristic ingredient parse (Phase 3),
+// then Haiku aisle classification with the ingredient_aisle_cache (Phase 4).
+// No persistence yet (recipes are saved when added to the list — Phase 5).
 recipeRoute.post('/recipe', async (c) => {
   let body: { url?: unknown };
   try {
@@ -49,10 +50,23 @@ recipeRoute.post('/recipe', async (c) => {
     );
   }
 
+  const parsed = scraped.ingredients.map(parseIngredient);
+
+  // Aisle tagging is an enhancement — a Haiku/DB hiccup must not fail the parse.
+  let aisleByNorm = new Map<string, string>();
+  try {
+    aisleByNorm = await classifyAisles(parsed.map((p) => p.item));
+  } catch (err) {
+    console.error('recipe: aisle classification failed:', err);
+  }
+
   return c.json({
     title: scraped.title,
     sourceUrl: scraped.sourceUrl,
     baseServings: scraped.baseServings,
-    ingredients: scraped.ingredients.map(parseIngredient),
+    ingredients: parsed.map((p) => ({
+      ...p,
+      aisle: aisleByNorm.get(normalizeName(p.item)) ?? null,
+    })),
   });
 });
