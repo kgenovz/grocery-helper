@@ -4,6 +4,7 @@ import { cors } from 'hono/cors';
 import { sql } from './db';
 import { env } from './env';
 import { runMigrations } from './migrate';
+import { recipeRoute } from './routes/recipe';
 
 const app = new Hono();
 
@@ -20,11 +21,14 @@ app.get('/health', async (c) => {
 });
 
 app.get('/', (c) =>
-  c.json({ service: 'grocery-helper-api', phase: 1, ok: true }),
+  c.json({ service: 'grocery-helper-api', ok: true }),
 );
 
+// POST /recipe -> scrape + JSON-LD parse + heuristic ingredient parse (Phase 3)
+app.route('/', recipeRoute);
+
 // --- Routes to come ---
-//   POST /recipe  -> scrape + parse + aisle classify   (Phase 3-4)
+//   POST /recipe  -> + Haiku parse + aisle classify      (Phase 4)
 //   GET/POST /list, /list/items                          (Phase 5-6)
 //   POST /price   -> PC Express match + price            (Phase 7)
 //   WS  /ws       -> live sync via LISTEN/NOTIFY         (Phase 8)

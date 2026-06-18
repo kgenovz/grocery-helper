@@ -6,10 +6,12 @@
     "dev": "tsx watch src/index.ts",
     "start": "tsx src/index.ts",
     "migrate": "tsx src/migrate.ts",
+    "test": "node --import tsx --test \"src/**/*.test.ts\"",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@hono/node-server": "^1.13.7",
+    "cheerio": "^1.0.0",
     "hono": "^4.6.14",
     "postgres": "^3.4.5",
     "tsx": "^4.19.2"
