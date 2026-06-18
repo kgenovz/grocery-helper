@@ -73,3 +73,31 @@ export function clearList(): Promise<GroceryList> {
     unwrap<GroceryList>(r),
   );
 }
+
+export function toggleItem(id: number, checked: boolean): Promise<void> {
+  return fetch(`/api/list/items/${id}`, {
+    method: 'PATCH',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ checked }),
+  }).then((r) => unwrap<unknown>(r).then(() => undefined));
+}
+
+export function deleteItem(id: number): Promise<void> {
+  return fetch(`/api/list/items/${id}`, { method: 'DELETE' }).then((r) =>
+    unwrap<unknown>(r).then(() => undefined),
+  );
+}
+
+export type Settings = { aisleOrder: string[] };
+
+export function getSettings(): Promise<Settings> {
+  return fetch('/api/settings').then((r) => unwrap<Settings>(r));
+}
+
+export function saveAisleOrder(order: string[]): Promise<Settings> {
+  return fetch('/api/settings/aisle-order', {
+    method: 'PUT',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ order }),
+  }).then((r) => unwrap<Settings>(r));
+}

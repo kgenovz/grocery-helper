@@ -6,6 +6,7 @@ import { env } from './env';
 import { runMigrations } from './migrate';
 import { recipeRoute } from './routes/recipe';
 import { listRoute } from './routes/list';
+import { settingsRoute } from './routes/settings';
 
 const app = new Hono();
 
@@ -28,13 +29,15 @@ app.get('/', (c) =>
 // POST /recipe -> scrape + JSON-LD parse + heuristic parse + aisle classify (Ph 3-4)
 app.route('/', recipeRoute);
 
-// GET /list, POST /list/items (merge), DELETE /list/items (Phase 5)
+// GET/POST/PATCH/DELETE /list[/items[/:id]] (Phase 5-6)
 app.route('/', listRoute);
 
+// GET /settings, PUT /settings/aisle-order — custom store layout (Phase 6)
+app.route('/', settingsRoute);
+
 // --- Routes to come ---
-//   PATCH /list/items/:id -> check-off, custom aisle order  (Phase 6)
-//   POST /price -> PC Express match + price                 (Phase 7)
-//   WS  /ws     -> live sync via LISTEN/NOTIFY              (Phase 8)
+//   POST /price -> PC Express match + price     (Phase 7)
+//   WS  /ws     -> live sync via LISTEN/NOTIFY  (Phase 8)
 
 async function main() {
   await runMigrations();

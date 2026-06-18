@@ -124,6 +124,43 @@ listRoute.post('/list/items', async (c) => {
   return c.json({ id: list.id, name: list.name, items: await loadItems(list.id) });
 });
 
+// PATCH /list/items/:id { checked?, qty? } -> check off / adjust one item.
+listRoute.patch('/list/items/:id', async (c) => {
+  const id = Number(c.req.param('id'));
+  if (!Number.isInteger(id)) return c.json({ error: 'invalid id' }, 400);
+  let body: { checked?: unknown; qty?: unknown };
+  try {
+    body = await c.req.json();
+  } catch {
+    return c.json({ error: 'invalid JSON body' }, 400);
+  }
+
+  const patch: Record<string, unknown> = {};
+  if (typeof body.checked === 'boolean') patch.checked = body.checked;
+  if (body.qty === null) patch.qty = null;
+  else if (typeof body.qty === 'number' && Number.isFinite(body.qty)) patch.qty = body.qty;
+  if (Object.keys(patch).length === 0) {
+    return c.json({ error: 'nothing to update' }, 400);
+  }
+
+  const updated = await sql<{ id: number }[]>`
+    update list_items set ${sql(patch)}, updated_at = now() where id = ${id} returning id
+  `;
+  if (updated.length === 0) return c.json({ error: 'not found' }, 404);
+  return c.json({ ok: true });
+});
+
+// DELETE /list/items/:id -> remove a single item.
+listRoute.delete('/list/items/:id', async (c) => {
+  const id = Number(c.req.param('id'));
+  if (!Number.isInteger(id)) return c.json({ error: 'invalid id' }, 400);
+  const deleted = await sql<{ id: number }[]>`
+    delete from list_items where id = ${id} returning id
+  `;
+  if (deleted.length === 0) return c.json({ error: 'not found' }, 404);
+  return c.json({ ok: true });
+});
+
 // DELETE /list/items -> clear the list (handy for a fresh shop / testing).
 listRoute.delete('/list/items', async (c) => {
   const list = await getHouseholdList();

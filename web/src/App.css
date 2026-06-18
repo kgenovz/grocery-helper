@@ -117,13 +117,84 @@ button.add { width: 100%; margin-top: 0.75rem; padding: 0.7rem; font-size: 1rem;
   letter-spacing: 0.06em;
   opacity: 0.7;
 }
-.list li {
+.list li.item {
   display: flex;
+  align-items: center;
   gap: 0.5rem;
+  padding: 0.15rem 0;
+  border-top: 1px solid rgba(127, 127, 127, 0.12);
+}
+.check {
+  flex: 1;
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  cursor: pointer;
+  padding: 0.3rem 0;
+  min-width: 0;
+}
+.check input {
+  width: 1.15rem;
+  height: 1.15rem;
+  accent-color: #16a34a;
+  align-self: center;
+  flex: none;
+}
+.item.checked .qty,
+.item.checked .name {
+  text-decoration: line-through;
+  opacity: 0.45;
+}
+.remove {
+  background: transparent;
+  color: inherit;
+  opacity: 0.4;
+  font-size: 1.3rem;
+  line-height: 1;
+  padding: 0.2rem 0.5rem;
+}
+.remove:hover { opacity: 0.9; color: #dc2626; }
+.empty { padding: 0.5rem 0; }
+
+/* --- store-layout settings --- */
+.settings { padding: 0; overflow: hidden; }
+.settings-toggle {
+  width: 100%;
+  background: transparent;
+  color: inherit;
+  font-weight: 600;
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.9rem 1rem;
+  border-radius: 0;
+}
+.chevron { opacity: 0.6; }
+.aisle-order { list-style: none; margin: 0; padding: 0 1rem 0.75rem; }
+.aisle-order li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
   padding: 0.35rem 0;
   border-top: 1px solid rgba(127, 127, 127, 0.12);
 }
-.empty { padding: 0.5rem 0; }
+.aisle-order .dot {
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 50%;
+  background: rgba(127, 127, 127, 0.3);
+  flex: none;
+}
+.aisle-name { flex: 1; }
+.moves { display: flex; gap: 0.3rem; }
+.moves button {
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  background: rgba(127, 127, 127, 0.15);
+  color: inherit;
+}
 
 /* aisle accent colors */
 .a-Produce { background: rgba(22, 163, 74, 0.18); }
