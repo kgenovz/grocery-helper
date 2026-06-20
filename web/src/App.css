@@ -109,6 +109,39 @@ button.add { width: 100%; margin-top: 0.75rem; padding: 0.7rem; font-size: 1rem;
 .count { opacity: 0.6; font-size: 0.85rem; }
 .list-head .ghost { margin-left: auto; }
 
+.total {
+  padding: 0.2rem 0 0.6rem;
+  font-size: 1.15rem;
+  border-bottom: 1px solid rgba(127, 127, 127, 0.16);
+  font-variant-numeric: tabular-nums;
+}
+.total .muted { font-size: 0.8rem; }
+
+.price {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+.sale {
+  background: #dc2626;
+  color: #fff;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  padding: 0.06rem 0.3rem;
+  border-radius: 0.25rem;
+}
+.age {
+  font-style: normal;
+  font-size: 0.72em;
+  opacity: 0.45;
+}
+.age.stale { color: #d97706; opacity: 0.85; }
+.item.checked .price { opacity: 0.45; }
+
 .aisle-group { margin-top: 0.75rem; }
 .aisle-head {
   margin: 0 0 0.25rem;

@@ -24,6 +24,9 @@ export type ListItem = {
   unit: string | null;
   aisle: string | null;
   checked: boolean;
+  estPrice: number | null;
+  onSale: boolean;
+  pricedAt: string | null;
 };
 
 export type GroceryList = {

@@ -22,3 +22,20 @@ export function scaleQty(qty: number | null, factor: number): number | null {
   if (qty === null) return null;
   return Math.round(qty * factor * 1000) / 1000;
 }
+
+export function formatPrice(n: number | null): string {
+  if (n === null || n === undefined) return '';
+  return `$${n.toFixed(2)}`;
+}
+
+// Human price age, with a "stale past ~3 weeks" flag (plan: grey out old prices).
+export function priceAge(pricedAt: string | null): { label: string; stale: boolean } | null {
+  if (!pricedAt) return null;
+  const then = new Date(pricedAt).getTime();
+  if (!Number.isFinite(then)) return null;
+  const days = Math.floor((Date.now() - then) / 86_400_000);
+  return {
+    label: days <= 0 ? 'today' : days === 1 ? '1d ago' : `${days}d ago`,
+    stale: days > 21,
+  };
+}

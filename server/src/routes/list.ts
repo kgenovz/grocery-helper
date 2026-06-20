@@ -14,6 +14,7 @@ type ItemRow = {
   checked: boolean;
   est_price: string | null;
   on_sale: boolean;
+  priced_at: Date | null;
   updated_at: Date;
 };
 
@@ -29,7 +30,7 @@ async function getHouseholdList(): Promise<ListRow> {
 
 async function loadItems(listId: number) {
   const rows = await sql<ItemRow[]>`
-    select id, item, qty, unit, aisle, checked, est_price, on_sale, updated_at
+    select id, item, qty, unit, aisle, checked, est_price, on_sale, priced_at, updated_at
     from list_items
     where list_id = ${listId}
     order by coalesce(aisle, 'Other'), lower(item)
@@ -43,6 +44,7 @@ async function loadItems(listId: number) {
     checked: r.checked,
     estPrice: r.est_price === null ? null : Number(r.est_price),
     onSale: r.on_sale,
+    pricedAt: r.priced_at,
     updatedAt: r.updated_at,
   }));
 }

@@ -7,6 +7,7 @@ import { runMigrations } from './migrate';
 import { recipeRoute } from './routes/recipe';
 import { listRoute } from './routes/list';
 import { settingsRoute } from './routes/settings';
+import { priceRoute } from './routes/price';
 
 const app = new Hono();
 
@@ -35,9 +36,12 @@ app.route('/', listRoute);
 // GET /settings, PUT /settings/aisle-order — custom store layout (Phase 6)
 app.route('/', settingsRoute);
 
+// GET /price/pending, POST /price/ingest — cost estimation (Phase 7).
+// Prices arrive from the Firefox extension running in the user's real session.
+app.route('/', priceRoute);
+
 // --- Routes to come ---
-//   POST /price -> PC Express match + price     (Phase 7)
-//   WS  /ws     -> live sync via LISTEN/NOTIFY  (Phase 8)
+//   WS /ws -> live sync via LISTEN/NOTIFY  (Phase 8)
 
 async function main() {
   await runMigrations();
